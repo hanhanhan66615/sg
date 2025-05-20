@@ -1,0 +1,650 @@
+#include "./SYSTEM/sys/sys.h"
+#include "./SYSTEM/delay/delay.h"
+#include "./SYSTEM/usart/usart.h"
+#include "./BSP/LED/led.h"
+#include "./BSP/KEY/key.h"
+#include "./BSP/LCD/lcd.h"
+#include "demo.h"
+void show_mesg(void)
+{ 
+    printf("\n");
+    printf("********************************\r\n");
+    printf("STM32\r\n");
+    printf("ATK-MC5640\r\n");
+    printf("ATOM@ALIENTEK\r\n");
+    printf("********************************\r\n");
+    printf("\r\n");
+}
+static void demo_uart_init(void)
+{
+    UART_HandleTypeDef uart_handle = {0};
+    GPIO_InitTypeDef gpio_init_struct = {0};
+    __HAL_RCC_UART5_CLK_ENABLE();
+    __HAL_RCC_GPIOC_CLK_ENABLE();
+    gpio_init_struct.Pin        = GPIO_PIN_12;
+    gpio_init_struct.Mode       = GPIO_MODE_AF_PP;
+    gpio_init_struct.Pull       = GPIO_PULLUP;
+    gpio_init_struct.Speed      = GPIO_SPEED_FREQ_HIGH;
+    gpio_init_struct.Alternate  = GPIO_AF8_UART5 ;
+    HAL_GPIO_Init(GPIOC, &gpio_init_struct);
+    uart_handle.Instance        = UART5;
+    uart_handle.Init.BaudRate   = 115200;
+    uart_handle.Init.WordLength = UART_WORDLENGTH_8B;
+    uart_handle.Init.StopBits   = UART_STOPBITS_1;
+    uart_handle.Init.Parity     = UART_PARITY_NONE;
+    uart_handle.Init.HwFlowCtl  = UART_HWCONTROL_NONE;
+    uart_handle.Init.Mode       = UART_MODE_TX;
+    HAL_UART_Init(&uart_handle);
+}
+int main(void)
+{
+    HAL_Init();                         
+    sys_stm32_clock_init(336, 8, 2, 7); 
+    delay_init(168);                    
+	demo_uart_init();
+    led_init();                         
+    key_init();                         
+    show_mesg();                        
+    demo_run();                         
+}
+#ifndef __STM32F4xx_HAL_CONF_H
+#define __STM32F4xx_HAL_CONF_H
+#ifdef __cplusplus
+ extern "C" {
+#endif
+#define HAL_MODULE_ENABLED
+#define HAL_ADC_MODULE_ENABLED
+#define HAL_CAN_MODULE_ENABLED
+#define HAL_CRC_MODULE_ENABLED
+#define HAL_CRYP_MODULE_ENABLED
+#define HAL_DAC_MODULE_ENABLED
+#define HAL_DCMI_MODULE_ENABLED
+#define HAL_DMA_MODULE_ENABLED
+#define HAL_EXTI_MODULE_ENABLED
+#define HAL_FLASH_MODULE_ENABLED
+#define HAL_NAND_MODULE_ENABLED
+#define HAL_NOR_MODULE_ENABLED
+#define HAL_PCCARD_MODULE_ENABLED
+#define HAL_SRAM_MODULE_ENABLED
+#define HAL_HASH_MODULE_ENABLED
+#define HAL_GPIO_MODULE_ENABLED
+#define HAL_I2C_MODULE_ENABLED
+#define HAL_I2S_MODULE_ENABLED
+#define HAL_IWDG_MODULE_ENABLED
+#define HAL_PWR_MODULE_ENABLED
+#define HAL_RCC_MODULE_ENABLED
+#define HAL_RNG_MODULE_ENABLED
+#define HAL_RTC_MODULE_ENABLED
+#define HAL_SD_MODULE_ENABLED
+#define HAL_SPI_MODULE_ENABLED
+#define HAL_TIM_MODULE_ENABLED
+#define HAL_UART_MODULE_ENABLED
+#define HAL_USART_MODULE_ENABLED
+#define HAL_IRDA_MODULE_ENABLED
+#define HAL_SMARTCARD_MODULE_ENABLED
+#define HAL_WWDG_MODULE_ENABLED
+#define HAL_CORTEX_MODULE_ENABLED
+#define HAL_PCD_MODULE_ENABLED
+#define HAL_HCD_MODULE_ENABLED
+#if !defined  (HSE_VALUE) 
+  #define HSE_VALUE    (8000000U) 
+#endif 
+#if !defined  (HSE_STARTUP_TIMEOUT)
+  #define HSE_STARTUP_TIMEOUT    (100U)   
+#endif 
+#if !defined  (HSI_VALUE)
+  #define HSI_VALUE    (16000000U) 
+#endif 
+#if !defined  (LSI_VALUE) 
+ #define LSI_VALUE  (32000U)    
+#endif                       
+#if !defined  (LSE_VALUE)
+ #define LSE_VALUE  (32768U)    
+#endif 
+#if !defined  (LSE_STARTUP_TIMEOUT)
+  #define LSE_STARTUP_TIMEOUT    (5000U)   
+#endif 
+#if !defined  (EXTERNAL_CLOCK_VALUE)
+  #define EXTERNAL_CLOCK_VALUE    (12288000U) 
+#endif 
+#define  VDD_VALUE                    (3300U) 
+#define  TICK_INT_PRIORITY            (0x0FU) 
+#define  USE_RTOS                     0U
+#define  PREFETCH_ENABLE              0U 
+#define  INSTRUCTION_CACHE_ENABLE     1U
+#define  DATA_CACHE_ENABLE            1U
+#define  USE_HAL_ADC_REGISTER_CALLBACKS         0U 
+#define  USE_HAL_CAN_REGISTER_CALLBACKS         0U 
+#define  USE_HAL_CEC_REGISTER_CALLBACKS         0U 
+#define  USE_HAL_CRYP_REGISTER_CALLBACKS        0U 
+#define  USE_HAL_DAC_REGISTER_CALLBACKS         0U 
+#define  USE_HAL_DCMI_REGISTER_CALLBACKS        0U 
+#define  USE_HAL_DFSDM_REGISTER_CALLBACKS       0U 
+#define  USE_HAL_DMA2D_REGISTER_CALLBACKS       0U 
+#define  USE_HAL_DSI_REGISTER_CALLBACKS         0U 
+#define  USE_HAL_ETH_REGISTER_CALLBACKS         0U 
+#define  USE_HAL_HASH_REGISTER_CALLBACKS        0U 
+#define  USE_HAL_HCD_REGISTER_CALLBACKS         0U 
+#define  USE_HAL_I2C_REGISTER_CALLBACKS         0U 
+#define  USE_HAL_FMPI2C_REGISTER_CALLBACKS      0U 
+#define  USE_HAL_I2S_REGISTER_CALLBACKS         0U 
+#define  USE_HAL_IRDA_REGISTER_CALLBACKS        0U 
+#define  USE_HAL_LPTIM_REGISTER_CALLBACKS       0U 
+#define  USE_HAL_LTDC_REGISTER_CALLBACKS        0U 
+#define  USE_HAL_MMC_REGISTER_CALLBACKS         0U 
+#define  USE_HAL_NAND_REGISTER_CALLBACKS        0U 
+#define  USE_HAL_NOR_REGISTER_CALLBACKS         0U 
+#define  USE_HAL_PCCARD_REGISTER_CALLBACKS      0U 
+#define  USE_HAL_PCD_REGISTER_CALLBACKS         0U 
+#define  USE_HAL_QSPI_REGISTER_CALLBACKS        0U 
+#define  USE_HAL_RNG_REGISTER_CALLBACKS         0U 
+#define  USE_HAL_RTC_REGISTER_CALLBACKS         0U 
+#define  USE_HAL_SAI_REGISTER_CALLBACKS         0U 
+#define  USE_HAL_SD_REGISTER_CALLBACKS          0U 
+#define  USE_HAL_SMARTCARD_REGISTER_CALLBACKS   0U 
+#define  USE_HAL_SDRAM_REGISTER_CALLBACKS       0U 
+#define  USE_HAL_SRAM_REGISTER_CALLBACKS        0U 
+#define  USE_HAL_SPDIFRX_REGISTER_CALLBACKS     0U 
+#define  USE_HAL_SMBUS_REGISTER_CALLBACKS       0U 
+#define  USE_HAL_SPI_REGISTER_CALLBACKS         0U 
+#define  USE_HAL_TIM_REGISTER_CALLBACKS         0U 
+#define  USE_HAL_UART_REGISTER_CALLBACKS        0U 
+#define  USE_HAL_USART_REGISTER_CALLBACKS       0U 
+#define  USE_HAL_WWDG_REGISTER_CALLBACKS        0U 
+#define USE_SPI_CRC                     1U
+#ifdef HAL_RCC_MODULE_ENABLED
+  #include "stm32f4xx_hal_rcc.h"
+#endif 
+#ifdef HAL_EXTI_MODULE_ENABLED
+  #include "stm32f4xx_hal_exti.h"
+#endif 
+#ifdef HAL_GPIO_MODULE_ENABLED
+  #include "stm32f4xx_hal_gpio.h"
+#endif 
+#ifdef HAL_DMA_MODULE_ENABLED
+  #include "stm32f4xx_hal_dma.h"
+#endif 
+#ifdef HAL_CORTEX_MODULE_ENABLED
+  #include "stm32f4xx_hal_cortex.h"
+#endif 
+#ifdef HAL_ADC_MODULE_ENABLED
+  #include "stm32f4xx_hal_adc.h"
+#endif 
+#ifdef HAL_CAN_MODULE_ENABLED
+  #include "stm32f4xx_hal_can.h"
+#endif 
+#ifdef HAL_CAN_LEGACY_MODULE_ENABLED
+  #include "stm32f4xx_hal_can_legacy.h"
+#endif 
+#ifdef HAL_CRC_MODULE_ENABLED
+  #include "stm32f4xx_hal_crc.h"
+#endif 
+#ifdef HAL_CRYP_MODULE_ENABLED
+  #include "stm32f4xx_hal_cryp.h" 
+#endif 
+#ifdef HAL_DMA2D_MODULE_ENABLED
+  #include "stm32f4xx_hal_dma2d.h"
+#endif 
+#ifdef HAL_DAC_MODULE_ENABLED
+  #include "stm32f4xx_hal_dac.h"
+#endif 
+#ifdef HAL_DCMI_MODULE_ENABLED
+  #include "stm32f4xx_hal_dcmi.h"
+#endif 
+#ifdef HAL_ETH_MODULE_ENABLED
+  #include "stm32f4xx_hal_eth.h"
+#endif 
+#ifdef HAL_FLASH_MODULE_ENABLED
+  #include "stm32f4xx_hal_flash.h"
+#endif 
+#ifdef HAL_SRAM_MODULE_ENABLED
+  #include "stm32f4xx_hal_sram.h"
+#endif 
+#ifdef HAL_NOR_MODULE_ENABLED
+  #include "stm32f4xx_hal_nor.h"
+#endif 
+#ifdef HAL_NAND_MODULE_ENABLED
+  #include "stm32f4xx_hal_nand.h"
+#endif 
+#ifdef HAL_PCCARD_MODULE_ENABLED
+  #include "stm32f4xx_hal_pccard.h"
+#endif  
+#ifdef HAL_SDRAM_MODULE_ENABLED
+  #include "stm32f4xx_hal_sdram.h"
+#endif 
+#ifdef HAL_HASH_MODULE_ENABLED
+ #include "stm32f4xx_hal_hash.h"
+#endif 
+#ifdef HAL_I2C_MODULE_ENABLED
+ #include "stm32f4xx_hal_i2c.h"
+#endif 
+#ifdef HAL_I2S_MODULE_ENABLED
+ #include "stm32f4xx_hal_i2s.h"
+#endif 
+#ifdef HAL_IWDG_MODULE_ENABLED
+ #include "stm32f4xx_hal_iwdg.h"
+#endif 
+#ifdef HAL_LTDC_MODULE_ENABLED
+ #include "stm32f4xx_hal_ltdc.h"
+#endif 
+#ifdef HAL_PWR_MODULE_ENABLED
+ #include "stm32f4xx_hal_pwr.h"
+#endif 
+#ifdef HAL_RNG_MODULE_ENABLED
+ #include "stm32f4xx_hal_rng.h"
+#endif 
+#ifdef HAL_RTC_MODULE_ENABLED
+ #include "stm32f4xx_hal_rtc.h"
+#endif 
+#ifdef HAL_SAI_MODULE_ENABLED
+ #include "stm32f4xx_hal_sai.h"
+#endif 
+#ifdef HAL_SD_MODULE_ENABLED
+ #include "stm32f4xx_hal_sd.h"
+#endif 
+#ifdef HAL_SPI_MODULE_ENABLED
+ #include "stm32f4xx_hal_spi.h"
+#endif 
+#ifdef HAL_TIM_MODULE_ENABLED
+ #include "stm32f4xx_hal_tim.h"
+#endif 
+#ifdef HAL_UART_MODULE_ENABLED
+ #include "stm32f4xx_hal_uart.h"
+#endif 
+#ifdef HAL_USART_MODULE_ENABLED
+ #include "stm32f4xx_hal_usart.h"
+#endif 
+#ifdef HAL_IRDA_MODULE_ENABLED
+ #include "stm32f4xx_hal_irda.h"
+#endif 
+#ifdef HAL_SMARTCARD_MODULE_ENABLED
+ #include "stm32f4xx_hal_smartcard.h"
+#endif 
+#ifdef HAL_WWDG_MODULE_ENABLED
+ #include "stm32f4xx_hal_wwdg.h"
+#endif 
+#ifdef HAL_PCD_MODULE_ENABLED
+ #include "stm32f4xx_hal_pcd.h"
+#endif 
+#ifdef HAL_HCD_MODULE_ENABLED
+ #include "stm32f4xx_hal_hcd.h"
+#endif 
+#ifdef  USE_FULL_ASSERT
+  #define assert_param(expr) ((expr) ? (void)0U : assert_failed((uint8_t *)__FILE__, __LINE__))
+  void assert_failed(uint8_t* file, uint32_t line);
+#else
+  #define assert_param(expr) ((void)0U)
+#endif 
+#ifdef __cplusplus
+}
+#endif
+#endif
+#ifndef __STM32F4xx_IT_H
+#define __STM32F4xx_IT_H
+#ifdef __cplusplus
+ extern "C" {
+#endif 
+void NMI_Handler(void);
+void HardFault_Handler(void);
+void MemManage_Handler(void);
+void BusFault_Handler(void);
+void UsageFault_Handler(void);
+void SVC_Handler(void);
+void DebugMon_Handler(void);
+void PendSV_Handler(void);
+void SysTick_Handler(void);
+#ifdef __cplusplus
+}
+#endif
+#endif
+#include "stm32f4xx_it.h"
+#include "stm32f4xx_hal.h"
+void NMI_Handler(void)
+{
+}
+void HardFault_Handler(void)
+{
+  while (1)
+  {
+  }
+}
+void MemManage_Handler(void)
+{
+  while (1)
+  {
+  }
+}
+void BusFault_Handler(void)
+{
+  while (1)
+  {
+  }
+}
+void UsageFault_Handler(void)
+{
+  while (1)
+  {
+  }
+}
+void DebugMon_Handler(void)
+{
+}
+#ifndef __DEMO_H
+#define __DEMO_H
+void demo_run(void);
+#endif
+#include "demo.h"
+#include "./BSP/ATK_MC5640/atk_mc5640.h"
+#include "./BSP/ATK_MW8266D/atk_mw8266d.h"
+#include "./BSP/ATK_MO1218/atk_mo1218.h"
+#include "./BSP/ATK_MW1278D/atk_mw1278d.h"
+#include "./SYSTEM/usart/usart.h"
+#include "./SYSTEM/delay/delay.h"
+#include "./BSP/lcd/lcd.h"
+#include "./BSP/led/led.h"
+#include <string.h>
+#include "FreeRTOS.h"
+#include "task.h"
+#include "queue.h"
+#include "semphr.h"
+#define DEMO_WIFI_SSID "nova_9_Pro"
+#define DEMO_WIFI_PWD "12345678"
+#if 0
+#define DEMO_SERVER_IP "192.168.43.231"
+#define DEMO_SERVER_PORT "1883"
+#define MQTT_TOPIC "ESP8266/online"
+#else
+#define DEMO_SERVER_IP "42.194.236.225"
+#define DEMO_SERVER_PORT "1883"
+#define MQTT_TOPIC "seat"
+#endif
+#define DEMO_ADDR 0                                  
+#define DEMO_WLRATE ATK_MW1278D_WLRATE_19K2          
+#define DEMO_CHANNEL 0                               
+#define DEMO_TPOWER ATK_MW1278D_TPOWER_20DBM         
+#define DEMO_WORKMODE ATK_MW1278D_WORKMODE_NORMAL    
+#define DEMO_TMODE ATK_MW1278D_TMODE_TT              
+#define DEMO_WLTIME ATK_MW1278D_WLTIME_1S            
+#define DEMO_UARTRATE ATK_MW1278D_UARTRATE_115200BPS 
+#define DEMO_UARTPARI ATK_MW1278D_UARTPARI_NONE      
+#define DEMO_UART_BAUDRATE 921600
+#define DEMO_JPEG_OUTPUT_WIDTH 320
+#define DEMO_JPEG_OUTPUT_HEIGHT 240
+#define DEMO_JPEG_BUF_SIZE (35 * 1024)
+uint32_t g_jpeg_buf[DEMO_JPEG_BUF_SIZE / sizeof(uint32_t)];
+#define START_TASK_PRIO 1            
+#define START_STK_SIZE 128           
+TaskHandle_t StartTask_Handler;      
+void start_task(void *pvParameters); 
+#define TASK1_PRIO 3            
+#define TASK1_STK_SIZE 128      
+TaskHandle_t Task1Task_Handler; 
+void task1(void *pvParameters); 
+#define TASK2_PRIO 2            
+#define TASK2_STK_SIZE 128      
+TaskHandle_t Task2Task_Handler; 
+void task2(void *pvParameters); 
+#define TASK3_PRIO 2            
+#define TASK3_STK_SIZE 480      
+TaskHandle_t Task3Task_Handler; 
+void task3(void *pvParameters); 
+#define TASK4_PRIO 4            
+#define TASK4_STK_SIZE 200      
+TaskHandle_t Task4Task_Handler; 
+void task4(void *pvParameters); 
+#define TASK5_PRIO 3            
+#define TASK5_STK_SIZE 256      
+TaskHandle_t Task5Task_Handler; 
+void task5(void *pvParameters); 
+QueueHandle_t xQueue1; 
+QueueHandle_t xQueue2;
+QueueHandle_t BinarySemaphore;
+static void demo_show_ip(char *buf)
+{
+    printf("IP: %s\r\n", buf);
+}
+uint8_t *buf = NULL;
+void demo_run(void)
+{
+    uint8_t ret;
+    printf("ATK-MW1278D init\r\n");
+    ret = atk_mw1278d_init(115200);
+    if (ret != 0)
+    {
+        printf("ATK-MW1278D init failed!\r\n");
+    }
+    else
+        printf("ATK-MW1278D init success\r\n");
+    atk_mw1278d_enter_config();
+    ret = atk_mw1278d_addr_config(DEMO_ADDR); 
+    printf("%d", ret);
+    ret += atk_mw1278d_wlrate_channel_config(DEMO_WLRATE, DEMO_CHANNEL);
+    ret += atk_mw1278d_tpower_config(DEMO_TPOWER);
+    ret += atk_mw1278d_workmode_config(DEMO_WORKMODE);
+    ret += atk_mw1278d_tmode_config(DEMO_TMODE);
+    ret += atk_mw1278d_wltime_config(DEMO_WLTIME);
+    ret += atk_mw1278d_uart_config(DEMO_UARTRATE, DEMO_UARTPARI);
+    atk_mw1278d_exit_config();
+    if (ret != 0)
+    {
+        printf("ATK-MW1278D config failed!\r\n");
+    }
+    else
+        printf("ATK-MW1278D config success!\r\n");
+    printf("Wifi init\r\n");
+    char ip_buf[16];
+    ret = atk_mw8266d_init(115200);
+    if (ret != 0)
+    {
+        printf("ATK-MW8266D init failed!\r\n");
+    }
+    printf("Joining to AP...\r\n");
+    atk_mw8266d_restore();
+    ret += atk_mw8266d_at_test();                              
+    ret += atk_mw8266d_set_mode(1);                            
+    ret += atk_mw8266d_sw_reset();                             
+    ret += atk_mw8266d_ate_config(0);                          
+    ret += atk_mw8266d_join_ap(DEMO_WIFI_SSID, DEMO_WIFI_PWD); 
+    ret += atk_mw8266d_get_ip(ip_buf);                         
+    if (ret != 0)
+    {
+        printf("Error to join ap!\r\n");
+    }
+    demo_show_ip(ip_buf);
+    ret = atk_mw8266d_connect_mqtt_server(DEMO_SERVER_IP, DEMO_SERVER_PORT);
+    if (ret != 0)
+    {
+        printf("Connect mqtt server failed\r\n");
+    }
+    else
+    {
+        printf("Connect mqtt server success\r\n");
+    }
+    ret = atk_mw8266d_mqtt_publish(MQTT_TOPIC, 2);
+    if (ret == 0)
+        printf("Publish Success\r\n");
+    else
+        printf("Publish failed\r\n");
+    printf("MC5640 init\r\n");
+    ret = atk_mc5640_init();
+    ret += atk_mc5640_set_output_format(ATK_MC5640_OUTPUT_FORMAT_JPEG);
+    ret += atk_mc5640_auto_focus_init();
+    ret += atk_mc5640_auto_focus_continuance();
+    ret += atk_mc5640_set_light_mode(ATK_MC5640_LIGHT_MODE_ADVANCED_AWB);
+    ret += atk_mc5640_set_color_saturation(ATK_MC5640_COLOR_SATURATION_4);
+    ret += atk_mc5640_set_brightness(ATK_MC5640_BRIGHTNESS_4);
+    ret += atk_mc5640_set_contrast(ATK_MC5640_CONTRAST_4);
+    ret += atk_mc5640_set_hue(ATK_MC5640_HUE_6);
+    ret += atk_mc5640_set_special_effect(ATK_MC5640_SPECIAL_EFFECT_NORMAL);
+    ret += atk_mc5640_set_exposure_level(ATK_MC5640_EXPOSURE_LEVEL_5);
+    ret += atk_mc5640_set_sharpness_level(ATK_MC5640_SHARPNESS_OFF);
+    ret += atk_mc5640_set_mirror_flip(ATK_MC5640_MIRROR_FLIP_1);
+    ret += atk_mc5640_set_test_pattern(ATK_MC5640_TEST_PATTERN_OFF);
+    ret += atk_mc5640_set_pre_scaling_window(4, 0);
+    ret += atk_mc5640_set_output_size(DEMO_JPEG_OUTPUT_WIDTH, DEMO_JPEG_OUTPUT_HEIGHT);
+    if (ret != 0)
+    {
+        printf("ATK-MC5640 init failed!\r\n");
+        while (1)
+        {
+            LED0_TOGGLE();
+            delay_ms(200);
+        }
+    }
+    else
+        printf("ATK_MC5640 init success!\r\n");
+    atk_mw1278d_uart_rx_restart();
+    xTaskCreate((TaskFunction_t)start_task,          
+                (const char *)"start_task",          
+                (uint16_t)START_STK_SIZE,            
+                (void *)NULL,                        
+                (UBaseType_t)START_TASK_PRIO,        
+                (TaskHandle_t *)&StartTask_Handler); 
+    vTaskStartScheduler();
+}
+void start_task(void *pvParameters)
+{
+    taskENTER_CRITICAL(); 
+    xQueue1 = xQueueCreate(20, sizeof(char *));
+    xQueue2 = xQueueCreate(1, sizeof(char *));
+    BinarySemaphore = xSemaphoreCreateBinary();
+    xTaskCreate((TaskFunction_t)task1,
+                (const char *)"task1",
+                (uint16_t)TASK1_STK_SIZE,
+                (void *)NULL,
+                (UBaseType_t)TASK1_PRIO,
+                (TaskHandle_t *)&Task1Task_Handler);
+    xTaskCreate((TaskFunction_t)task2,
+                (const char *)"task2",
+                (uint16_t)TASK2_STK_SIZE,
+                (void *)NULL,
+                (UBaseType_t)TASK2_PRIO,
+                (TaskHandle_t *)&Task2Task_Handler);
+    xTaskCreate((TaskFunction_t)task3,
+                (const char *)"task3",
+                (uint16_t)TASK3_STK_SIZE,
+                (void *)NULL,
+                (UBaseType_t)TASK3_PRIO,
+                (TaskHandle_t *)&Task3Task_Handler);
+    xTaskCreate((TaskFunction_t)task4,
+                (const char *)"task4",
+                (uint16_t)TASK4_STK_SIZE,
+                (void *)NULL,
+                (UBaseType_t)TASK4_PRIO,
+                (TaskHandle_t *)&Task4Task_Handler);
+    vTaskDelete(StartTask_Handler); 
+    taskEXIT_CRITICAL();            
+}
+void task1(void *pvParameters)
+{
+    uint8_t *p_jpeg_buf;
+    uint32_t jpeg_len;
+    uint32_t jpeg_index;
+    uint32_t jpeg_start_index;
+    uint32_t jpeg_end_index;
+    while (1)
+    {
+        xSemaphoreTake(BinarySemaphore, portMAX_DELAY);
+        p_jpeg_buf = (uint8_t *)g_jpeg_buf;
+        jpeg_len = DEMO_JPEG_BUF_SIZE / (sizeof(uint32_t));
+        memset((void *)g_jpeg_buf, 0, DEMO_JPEG_BUF_SIZE);
+        atk_mc5640_get_frame((uint32_t)g_jpeg_buf, ATK_MC5640_GET_TYPE_DTS_32B_INC, NULL);
+        for (jpeg_start_index = UINT32_MAX, jpeg_index = 0; jpeg_index < DEMO_JPEG_BUF_SIZE - 1; jpeg_index++)
+        {
+            if ((p_jpeg_buf[jpeg_index] == 0xFF) && (p_jpeg_buf[jpeg_index + 1] == 0xD8))
+            {
+                jpeg_start_index = jpeg_index;
+                break;
+            }
+        }
+        if (jpeg_start_index == UINT32_MAX)
+        {
+            continue;
+        }
+        for (jpeg_end_index = UINT32_MAX, jpeg_index = jpeg_start_index; jpeg_index < DEMO_JPEG_BUF_SIZE - 1; jpeg_index++)
+        {
+            if ((p_jpeg_buf[jpeg_index] == 0xFF) && (p_jpeg_buf[jpeg_index + 1] == 0xD9))
+            {
+                jpeg_end_index = jpeg_index;
+                break;
+            }
+        }
+        if (jpeg_end_index == UINT32_MAX)
+        {
+            continue;
+        }
+        jpeg_len = jpeg_end_index - jpeg_start_index + (sizeof(uint32_t) >> 1);
+        vTaskSuspendAll();
+        atk_mw8266d_enter_unvarnished();
+        for (jpeg_index = jpeg_start_index; jpeg_index < jpeg_len; jpeg_index++)
+        {
+            USART2->DR = p_jpeg_buf[jpeg_index];
+            while (USART2->SR == 0);
+        }
+        atk_mw8266d_exit_unvarnished();
+        xTaskResumeAll();
+    }
+}
+void task2(void *pvParameters)
+{
+    uint8_t *ack = NULL;
+    while (1)
+    {
+        ack = atk_mw8266d_uart_rx_get_frame();
+        if (ack != NULL)
+        {
+            if(memcmp(ack,"error",5) == 0)
+            {
+                printf("Anomaly detected\r\n");
+                xSemaphoreGive(BinarySemaphore);
+            }
+            atk_mw8266d_uart_rx_restart();
+        }
+    }
+}
+void task3(void *pvParameters)
+{
+    while (1)
+    {
+        buf = atk_mw1278d_uart_rx_get_frame();
+        if (buf != NULL)
+        {
+            atk_mw1278d_uart_rx_restart();
+            printf("task3:%s\r\n", buf);
+            xQueueSend(xQueue1, &buf, portMAX_DELAY); 
+        }
+    }
+}
+void task4(void *pyParameters)
+{
+    while (1)
+    {
+        char cmd[300];
+        char *data;
+        memset(cmd, '\0', sizeof(cmd));
+        xQueueReceive(xQueue1, &data, portMAX_DELAY);
+        printf("task4:%s\r\n", data);
+        sprintf(cmd, "AT+MQTTPUBRAW=0,\"seat\",%d,0,0", strlen(data));
+        printf("%s,%d\r\n",cmd,strlen(cmd));
+        if (ATK_MW8266D_EOK == atk_mw8266d_send_at_cmd(cmd, "OK", 1000))
+        {
+            sprintf(cmd,"%s",data);
+            if (ATK_MW8266D_EOK == atk_mw8266d_send_at_cmd(cmd, "OK", 1000))
+            {
+                printf("Send success\r\n");
+            }
+            else 
+            {
+                printf("data error\r\n");
+            }
+        }
+        else
+            printf("Send error\r\n");
+    }
+}
+void vApplicationStackOverflowHook(TaskHandle_t xTask, char *pcTaskName)
+{
+    printf("Stack Overflow in Task: %s\n", pcTaskName);
+    while (1)
+        ;
+}
